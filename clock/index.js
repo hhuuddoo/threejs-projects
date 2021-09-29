@@ -24,6 +24,8 @@ const backLight = new THREE.DirectionalLight(0xFFFFFF, 1);
 backLight.position.z = -5;
 scene.add(backLight);
 
+
+
 const clockRadius = 5;
 
 // create extruded circle
@@ -58,7 +60,7 @@ const hourMaterial = new THREE.MeshPhongMaterial({color: 0x282832});
 const hourMesh = new THREE.Mesh(hourGeometry, hourMaterial);
 scene.add(hourMesh);
 
-// create hour handle
+// create minute handle
 const minuteGeometry = new THREE.BoxGeometry(0.1, clockRadius/2, 0.2);
 minuteGeometry.translate(0, clockRadius/4, 0);
 const minuteMaterial = new THREE.MeshPhongMaterial({color: 0x282832});
@@ -86,8 +88,10 @@ scene.add(clockBaseMesh);
 function animate() {
 	requestAnimationFrame(animate);
 
-	hourMesh.rotation.z -= Math.PI / 120;
-	minuteMesh.rotation.z -= Math.PI / 1440;
+	const clockSpeed = 120;
+
+	hourMesh.rotation.z -= Math.PI / clockSpeed;
+	minuteMesh.rotation.z -= Math.PI / (clockSpeed*12);
 
 	renderer.render(scene, camera);
 }
