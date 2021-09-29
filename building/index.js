@@ -8,7 +8,7 @@ document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x222222);
 
-// create camera at (0, 0, 5)
+// create camera at (0, 0, 10)
 const camera = new THREE.PerspectiveCamera(85, innerWidth / innerHeight, 0.1, 1000);
 camera.position.z = 10;
 
