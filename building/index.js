@@ -22,7 +22,6 @@ scene.add(light);
 // creates a floor object at a vertical offset
 function createFloor(yOffset) {
 
-	// points that define our shape
 	const points = [
 		{x: -5.5, y: -2.5},
 	    {x: -5.5, y: -0.5},
@@ -54,7 +53,7 @@ function createFloor(yOffset) {
 	const floorShape = new THREE.Shape(vectors);
 	const floorGeometry = new THREE.ExtrudeGeometry(floorShape, extrudeSettings);
 	const floorMaterial = new THREE.MeshPhongMaterial({color: 0xFF0000});
-	const floorMesh = new THREE.Mesh(floorGeometry.center(), floorMaterial);
+	const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
 
 	// correct the orientation of the generated shape
 	floorMesh.rotation.x = -Math.PI / 2;
