@@ -159,7 +159,6 @@ function getCar() {
 
 // render bridge
 const height = 10;
-
 const bridge = getBridge(10, 3, height);
 const bridgeSize = new THREE.Vector3();
 new THREE.Box3().setFromObject(bridge).getSize(bridgeSize);
@@ -180,10 +179,6 @@ const seaGeometry = new THREE.PlaneGeometry(bridgeSize.x*3, bridgeSize.x*3);
 const sea = new THREE.Mesh(seaGeometry, new THREE.MeshPhongMaterial({color: 0x006994}) );
 sea.rotation.x = -Math.PI/2;
 scene.add(sea);	
-
-
-
-
 
 // render the scene
 function animate() {
