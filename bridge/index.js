@@ -4,13 +4,14 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
-// create scene with white background
+// create scene with blue background
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x222222);
+scene.background = new THREE.Color(0xD8F2FF);
 
 // create camera
 const camera = new THREE.PerspectiveCamera(85, innerWidth / innerHeight, 0.1, 1000);
-camera.position.z = 10;
+// camera.position.z = 15;
+camera.position.set(0, 15, 15);
 
 // init camera controls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -50,7 +51,7 @@ function getSupport() {
 	const extrudeSettings = { depth: 1, bevelEnabled: false};
 	const geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
 
-	return new THREE.Mesh( geometry.center(), new THREE.MeshPhongMaterial() );
+	return new THREE.Mesh( geometry.center(), new THREE.MeshPhongMaterial({color: 0xfc4425}) );
 }
 
 // gets a series of support beams
@@ -99,7 +100,7 @@ function getBridge(beams, width) {
 	// create platform
 	const platformHeight = 0.5;
 	const platformGeometry = new THREE.BoxGeometry(size.x, platformHeight, width);
-	const platformMesh = new THREE.Mesh( platformGeometry, new THREE.MeshPhongMaterial() );
+	const platformMesh = new THREE.Mesh( platformGeometry, new THREE.MeshPhongMaterial({color: 0x727272}) );
 	
 	// set z position
 	platformMesh.position.z = size.z/2 + width/2;
@@ -121,10 +122,49 @@ function getBridge(beams, width) {
 	return bridge;
 }
 
-scene.add(getBridge(4, 4));
+function getCar() {
+	const car = new THREE.Group();
+
+	const bodyGeometry = new THREE.BoxGeometry(3, 1, 2);
+	const body = new THREE.Mesh(bodyGeometry, new THREE.MeshPhongMaterial({color: 0xFF0000}));
+	car.add(body);
+
+	const headGeometry = new THREE.BoxGeometry(1.75, 1, 2);
+	const head = new THREE.Mesh(headGeometry, new THREE.MeshPhongMaterial({color: 0xFF0000}));
+	head.position.y = 1;
+	car.add(head);
+
+	const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 32);
+
+	const wheelPoints = [
+		{x:1, z:1},
+		{x:-1, z:1},
+		{x:1, z:-1},
+		{x:-1, z:-1},
+	];
+
+	for (let wheelPoint of wheelPoints) {
+		const wheel = new THREE.Mesh(wheelGeometry, new THREE.MeshPhongMaterial({color: 0x000000, side: THREE.DoubleSide}) );
+		wheel.rotation.x = Math.PI/2;
+		wheel.position.set(wheelPoint.x, -0.5, wheelPoint.z);
+		car.add(wheel);
+	}
+	
+	return car;
+}
 
 
 
+// render bridge
+const bridge = getBridge(4, 4);
+const bridgeSize = new THREE.Vector3();
+new THREE.Box3().setFromObject(bridge).getSize(bridgeSize);
+scene.add(bridge);
+
+// render car
+const car = getCar();
+car.position.y = 7.5;
+scene.add(car);
 
 // add polar grid helper to the scene
 const radius = 10;
@@ -137,6 +177,13 @@ scene.add( new THREE.PolarGridHelper( radius, radials, circles, divisions ) );
 // render the scene
 function animate() {
 	requestAnimationFrame(animate);
+
+	if (car.position.x > bridgeSize.x/2) {
+		car.position.x = -bridgeSize.x/2;
+	}
+
+	car.position.x += 0.1;
+
 	renderer.render(scene, camera);
 }
 animate();
