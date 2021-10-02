@@ -76,15 +76,52 @@ function getSupports(noOfSupports) {
 	return supports;
 }
 
-const supports = getSupports(2);
+// gets a bridge object
+function getBridge(beams, width) {
+	// error checks
+	if (beams < 1) throw new Error("You must enter at least 1 beam");
+	if (width <= 0) throw new Error("Width must be greater than 0");
 
-// get the dimensions of a single support
-const bBox = new THREE.Box3().setFromObject(supports);
-const size = new THREE.Vector3();
-bBox.getSize(size);
-console.log(size);
+	const bridge = new THREE.Group();
+	const frontSupports = getSupports(beams);
+	const backSupports = getSupports(beams);
+	bridge.add(frontSupports);
+	bridge.add(backSupports);
 
-scene.add(supports);
+	// get the dimensions of a single support
+	const bBox = new THREE.Box3().setFromObject(frontSupports);
+	const size = new THREE.Vector3();
+	bBox.getSize(size);
+
+	// reposition front bridge support
+	frontSupports.position.z = size.z + width;
+
+	// create platform
+	const platformHeight = 0.5;
+	const platformGeometry = new THREE.BoxGeometry(size.x, platformHeight, width);
+	const platformMesh = new THREE.Mesh( platformGeometry, new THREE.MeshPhongMaterial() );
+	
+	// set z position
+	platformMesh.position.z = size.z/2 + width/2;
+
+	// set y position
+	platformMesh.position.y =  size.y/2 - platformHeight/2 - 0.5;
+
+	// set x position
+	platformMesh.position.x = size.x/2 - size.x/beams/2;
+
+	// add platform to bridge
+	bridge.add(platformMesh);
+
+	// set the bridge to the center of the scene
+	new THREE.Box3().setFromObject( bridge ).getCenter( bridge.position ).multiplyScalar(-1);
+
+	bridge.position.y = size.y/2;
+
+	return bridge;
+}
+
+scene.add(getBridge(4, 4));
 
 
 
