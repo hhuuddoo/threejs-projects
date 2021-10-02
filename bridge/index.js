@@ -122,18 +122,22 @@ function getBridge(beams, width) {
 	return bridge;
 }
 
+// gets a car object
 function getCar() {
 	const car = new THREE.Group();
 
+	// define car body
 	const bodyGeometry = new THREE.BoxGeometry(3, 1, 2);
 	const body = new THREE.Mesh(bodyGeometry, new THREE.MeshPhongMaterial({color: 0xFF0000}));
 	car.add(body);
 
+	// define the head of the car
 	const headGeometry = new THREE.BoxGeometry(1.75, 1, 2);
 	const head = new THREE.Mesh(headGeometry, new THREE.MeshPhongMaterial({color: 0xFF0000}));
 	head.position.y = 1;
 	car.add(head);
 
+	// generate wheels
 	const wheelGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 32);
 
 	const wheelPoints = [
@@ -153,8 +157,6 @@ function getCar() {
 	return car;
 }
 
-
-
 // render bridge
 const bridge = getBridge(10, 10);
 const bridgeSize = new THREE.Vector3();
@@ -166,13 +168,7 @@ const car = getCar();
 car.position.y = 7.5;
 scene.add(car);
 
-// add polar grid helper to the scene
-const radius = 10;
-const radials = 16;
-const circles = 8;
-const divisions = 64;
-scene.add( new THREE.PolarGridHelper( radius, radials, circles, divisions ) );
-
+// add sea to the scene
 const seaGeometry = new THREE.PlaneGeometry(bridgeSize.x*3, bridgeSize.x*3);
 const sea = new THREE.Mesh(seaGeometry, new THREE.MeshPhongMaterial({color: 0x006994}) );
 sea.rotation.x = -Math.PI/2;
@@ -183,6 +179,7 @@ scene.add(sea);
 function animate() {
 	requestAnimationFrame(animate);
 
+	// reset car position
 	if (car.position.x > bridgeSize.x/2) {
 		car.position.x = -bridgeSize.x/2;
 	}
