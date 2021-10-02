@@ -156,7 +156,7 @@ function getCar() {
 
 
 // render bridge
-const bridge = getBridge(4, 4);
+const bridge = getBridge(10, 10);
 const bridgeSize = new THREE.Vector3();
 new THREE.Box3().setFromObject(bridge).getSize(bridgeSize);
 scene.add(bridge);
@@ -172,6 +172,11 @@ const radials = 16;
 const circles = 8;
 const divisions = 64;
 scene.add( new THREE.PolarGridHelper( radius, radials, circles, divisions ) );
+
+const seaGeometry = new THREE.PlaneGeometry(bridgeSize.x*3, bridgeSize.x*3);
+const sea = new THREE.Mesh(seaGeometry, new THREE.MeshPhongMaterial({color: 0x006994}) );
+sea.rotation.x = -Math.PI/2;
+scene.add(sea);
 
 
 // render the scene
