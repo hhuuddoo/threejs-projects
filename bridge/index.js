@@ -21,14 +21,14 @@ const light = new THREE.HemisphereLight(0xFFFFBB, 0x68684D, 1);
 scene.add(light);
 
 // gets a single support beam
-function getSupport() {
+function getSupport(height=5) {
 
 	// define verticies
 	const points = [
 		{x: 0, y: 0},
 		{x: 4, y: -4, cpX: 4, cpY: 0},
-		{x: 4, y: -6},
-		{x: 5, y: -6},
+		{x: 4, y: -height},
+		{x: 5, y: -height},
 		{x: 5, y: -4},
 		{x: 9, y: 0, cpX: 5, cpY: 0},
 		{x: 9, y: 1},
@@ -55,8 +55,8 @@ function getSupport() {
 }
 
 // gets a series of support beams
-function getSupports(noOfSupports) {
-	const support = getSupport();
+function getSupports(noOfSupports, height) {
+	const support = getSupport(height);
 
 	// get the dimensions of a single support
 	const bBox = new THREE.Box3().setFromObject(support);
@@ -69,7 +69,7 @@ function getSupports(noOfSupports) {
 	supports.add(support);
 
 	for (let i = 1; i < noOfSupports; i++) {
-		const temp = getSupport();
+		const temp = getSupport(height);
 		temp.position.x = i * size.x;
 		supports.add(temp);
 	}
@@ -78,14 +78,14 @@ function getSupports(noOfSupports) {
 }
 
 // gets a bridge object
-function getBridge(beams, width) {
+function getBridge(beams, width, height) {
 	// error checks
 	if (beams < 1) throw new Error("You must enter at least 1 beam");
 	if (width <= 0) throw new Error("Width must be greater than 0");
 
 	const bridge = new THREE.Group();
-	const frontSupports = getSupports(beams);
-	const backSupports = getSupports(beams);
+	const frontSupports = getSupports(beams, height);
+	const backSupports = getSupports(beams, height);
 	bridge.add(frontSupports);
 	bridge.add(backSupports);
 
@@ -158,21 +158,31 @@ function getCar() {
 }
 
 // render bridge
-const bridge = getBridge(10, 10);
+const height = 10;
+
+const bridge = getBridge(10, 3, height);
 const bridgeSize = new THREE.Vector3();
 new THREE.Box3().setFromObject(bridge).getSize(bridgeSize);
 scene.add(bridge);
 
 // render car
 const car = getCar();
-car.position.y = 7.5;
-scene.add(car);
+const carSize = new THREE.Vector3();
+new THREE.Box3().setFromObject(car).getSize(carSize);
+car.position.y = height+1.5;
+if (bridgeSize.z-2 >= carSize.z) {
+	scene.add(car);
+}
+
 
 // add sea to the scene
 const seaGeometry = new THREE.PlaneGeometry(bridgeSize.x*3, bridgeSize.x*3);
 const sea = new THREE.Mesh(seaGeometry, new THREE.MeshPhongMaterial({color: 0x006994}) );
 sea.rotation.x = -Math.PI/2;
-scene.add(sea);
+scene.add(sea);	
+
+
+
 
 
 // render the scene
