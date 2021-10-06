@@ -59,9 +59,8 @@ function getSupports(noOfSupports, height) {
 	const support = getSupport(height);
 
 	// get the dimensions of a single support
-	const bBox = new THREE.Box3().setFromObject(support);
 	const size = new THREE.Vector3();
-	bBox.getSize(size);
+	new THREE.Box3().setFromObject(support).getSize(size);
 
 	if (noOfSupports <= 1) return support;
 	// create group of support beams
@@ -90,9 +89,8 @@ function getBridge(beams, width, height) {
 	bridge.add(backSupports);
 
 	// get the dimensions of a single support
-	const bBox = new THREE.Box3().setFromObject(frontSupports);
 	const size = new THREE.Vector3();
-	bBox.getSize(size);
+	new THREE.Box3().setFromObject(frontSupports).getSize(size);
 
 	// reposition front bridge support
 	frontSupports.position.z = size.z + width;
@@ -168,7 +166,7 @@ scene.add(bridge);
 const car = getCar();
 const carSize = new THREE.Vector3();
 new THREE.Box3().setFromObject(car).getSize(carSize);
-car.position.y = height+1.5;
+car.position.y = height + 1.5;
 if (bridgeSize.z-2 >= carSize.z) {
 	scene.add(car);
 }
