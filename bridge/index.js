@@ -155,9 +155,13 @@ function getCar() {
 	return car;
 }
 
-// render bridge
+// bridge options
+const beams = 10;
+const width = 3;
 const height = 10;
-const bridge = getBridge(10, 3, height);
+
+// render bridge
+const bridge = getBridge(beams, width, height);
 const bridgeSize = new THREE.Vector3();
 new THREE.Box3().setFromObject(bridge).getSize(bridgeSize);
 scene.add(bridge);
