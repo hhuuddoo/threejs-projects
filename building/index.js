@@ -109,7 +109,9 @@ function createBuilding(levels, levelHeight) {
 }
 
 // add building to the scene
-scene.add(createBuilding(10, 3));
+const levels = 5;
+const levelHeight = 3;
+scene.add(createBuilding(levels, levelHeight));
 
 
 // add polar grid helper to the scene
